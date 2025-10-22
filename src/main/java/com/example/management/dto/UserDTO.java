@@ -1,5 +1,7 @@
 package com.example.management.dto;
 
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,4 +18,5 @@ public class UserDTO {
     private String name;
     // メールアドレス
     private String email;
+    private Set<String> roles;
 }

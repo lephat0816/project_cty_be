@@ -2,8 +2,11 @@ package com.example.management.mapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.example.management.dto.UserDTO;
+import com.example.management.entity.Role;
 import com.example.management.entity.User;
 
 public class UserMapper {
@@ -12,7 +15,10 @@ public class UserMapper {
         if (user == null) {
             return null;
         }
-        return new UserDTO(user.getId(), user.getUsername(), user.getName(), user.getEmail());
+        Set<String> roleNames = user.getRoles().stream()
+                                    .map(Role::getName)
+                                    .collect(Collectors.toSet());
+        return new UserDTO(user.getId(), user.getUsername(), user.getName(), user.getEmail(), roleNames);
     }
     
     public static UserDTO toDTO(Optional<User> userOpt) {
@@ -20,7 +26,10 @@ public class UserMapper {
             return null;
         }
         User user = userOpt.get();
-        return new UserDTO(user.getId(), user.getUsername(), user.getName(), user.getEmail());
+        Set<String> roleNames = user.getRoles().stream()
+                                    .map(Role::getName)
+                                    .collect(Collectors.toSet());
+        return new UserDTO(user.getId(), user.getUsername(), user.getName(), user.getEmail(), roleNames);
     }
     // UserエンティティのリストをUserDTOのリストに変換
     public static List<UserDTO> toDTOList(List<User> users) {

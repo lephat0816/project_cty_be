@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.management.dto.LoginRequest;
+import com.example.management.dto.LoginResponse;
 import com.example.management.dto.UserDTO;
 import com.example.management.entity.User;
 import com.example.management.service.AdminService;
@@ -49,6 +51,7 @@ public class UserController {
         return userService.getUserById(id);
     }
     // ユーザー情報を更新するエンドポイント
+    @PreAuthorize("hasRole('admin')")
     @PutMapping("/user/{id}")
     public UserDTO updateUser(@RequestBody User newUser, @PathVariable Long id) {
         //  IDでユーザーを検索し、見つかれば更新し、保存する
@@ -56,6 +59,7 @@ public class UserController {
 
     }
     // ユーザーを削除するエンドポイント
+    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("/user/{id}")
     public String deleteUser(@PathVariable Long id) {
         // ユーザーが存在しない場合は404エラーをスロー
@@ -64,9 +68,9 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        UserDTO user = adminService.login(loginRequest.getUsername(),loginRequest.getPassword());
-        if (user != null) {
-            return ResponseEntity.ok(user);
+        LoginResponse response = adminService.login(loginRequest.getUsername(),loginRequest.getPassword());
+        if (response != null) {
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity
             .status(HttpStatus.UNAUTHORIZED)
