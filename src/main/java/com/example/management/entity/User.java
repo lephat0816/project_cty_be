@@ -15,6 +15,13 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * ユーザー情報を表すエンティティ。
+ *
+ * このクラスはアプリケーション内のユーザー管理に使用されます。
+ * ユーザー名、メールアドレス、パスワード、名前などの情報を保持します。
+ * また、複数のロール(Role)を保持し、権限管理に利用されます。
+ */
 @Entity
 @Table(name = "users")
 @Data
@@ -35,7 +42,11 @@ public class User {
     // パスワード（必須入力）
     @NotBlank(message = "パスワードの入力が必要です。")
     private String password;
+    @NotBlank(message = "IDの入力が必要です。")
+    private String employeeId;
     
+
+    //  ユーザーに紐づくロール一覧（多対多)
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
                joinColumns = @JoinColumn(name = "user_id"),

@@ -1,7 +1,5 @@
 package com.example.management.util;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +11,9 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-
+/**
+ * JWT (JSON Web Token) の生成、検証、クレーム抽出を行うユーティリティクラス。
+ */
 @Component
 public class JWTUtil {
     // トークン署名用の秘密鍵
@@ -43,26 +43,51 @@ public class JWTUtil {
         return token;
 
     }
-
+    /**
+     * JWTトークンからユーザー名を抽出。
+     *
+     * @param token JWTトークン
+     * @return 抽出されたユーザー名
+     */
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
-
+    /**
+     * JWTトークンからユーザーIDを抽出。
+     *
+     * @param token JWTトークン
+     * @return 抽出されたユーザーID
+     */
     public Long extractUserId(String token) {
         return extractAllClaims(token).get("userId", Long.class);
     }
-
+    /**
+     * トークンの有効期限が切れているかを判定。
+     *
+     * @param token JWTトークン
+     * @return 有効期限切れの場合はtrue、まだ有効ならfalse
+     */
     public Boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
-
+    /**
+     * トークンが指定したユーザー名と一致し、有効期限内かどうかを検証。
+     *
+     * @param token JWTトークン
+     * @param username 検証対象のユーザー名
+     * @return 検証結果（trueなら有効）
+     */
     public Boolean validateToken(String token, String username) {
         final String extractedUsername = extractUsername(token);
-        System.out.println("Extracted: " + extractedUsername);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
 
-    // トークンから全てのクレームを取得
+    /**
+     * JWTトークンから全てのクレームを抽出。
+     *
+     * @param token JWTトークン
+     * @return 抽出されたクレーム情報
+     */
     public Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(SECRET_KEY)

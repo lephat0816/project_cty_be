@@ -3,9 +3,17 @@ package com.example.management.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;;;
-
+/**
+ * Web全体の設定クラス。
+ * このクラスではSpring MVCレベルでのCORSの設定
+ * @RestControllerや@Controllerで処理されるリクエストに適用される。
+ */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    /**
+     * フロントエンド（http://localhost:3000）からのリクエストを許可し、
+     * 特定のHTTPメソッドとヘッダーを許可。
+     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // 全てのパスに対してCORSを適用

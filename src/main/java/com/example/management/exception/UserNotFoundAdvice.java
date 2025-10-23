@@ -7,10 +7,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 
-@ControllerAdvice // このクラスが例外を処理するためのアドバイスクラスであることを示す
+/**
+ * ユーザーが見つからなかった場合の例外を処理するクラス。
+ *
+ * UserNotFoundExceptionがスローされた場合に、このクラスでキャッチし、
+ * 適切なHTTPステータスコードとエラーメッセージを返す。
+ */
+@ControllerAdvice 
 public class UserNotFoundAdvice {
     // UserNotFoundExceptionが発生した場合の例外処理メソッド
     @ResponseBody  // レスポンスボディとして返す
